@@ -7,109 +7,228 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      title: 'MouseRegion',
+      home: BBB(),
+      // home: AAA(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+class AAA extends StatelessWidget {
+  AAA({Key? key}) : super(key: key);
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  void _hover() {
+    print('d');
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Text('MouseRegion'),
+        elevation: 0,
+        foregroundColor: Colors.cyanAccent,
+        backgroundColor: Colors.black,
+        centerTitle: true,
       ),
+      backgroundColor: Colors.greenAccent[100],
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
+        child: Container(
+          width: 700,
+          height: 700,
+          color: Colors.white,
+          child: Row(
+            children: <Widget>[
+              MouseRegion(
+                cursor: SystemMouseCursors.click,
+                // onHover: () => _hover,
+                child: GestureDetector(
+                  onTap: () => print('clicked'),
+                  child: Container(
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.red, width: 1),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      '메뉴 소개',
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+
+class BBB extends StatefulWidget {
+  const BBB({Key? key}) : super(key: key);
+
+  @override
+  State<BBB> createState() => _BBBState();
+}
+
+class _BBBState extends State<BBB> {
+// 클릭시 _id값이 3이되면 active색으로 변경
+// _exit 시, _id가 3이아니면 적용하고 3이면 바뀐색 그대로 두게 변경없이
+  late Color _ttColor;
+  late Color _bgColor;
+  late Color _bdColor;
+  int _id = 1;
+  @override
+  void initState() {
+    super.initState();
+    _bgColor = _menuTap['normal']!['bgColor']!;
+    _ttColor = _menuTap['normal']!['textColor']!;
+    _bdColor = _menuTap['normal']!['borderColor']!;
+  }
+
+  void _enter(PointerEvent details) {
+    setState(() {
+      _bgColor = _menuTap['hover']!['bgColor']!;
+      _ttColor = _menuTap['hover']!['textColor']!;
+      _bdColor = _menuTap['hover']!['borderColor']!;
+    });
+  }
+
+  void _exit(PointerEvent details) {
+    setState(() {
+      if (_id == 1) {
+        _bgColor = _menuTap['normal']!['bgColor']!;
+        _ttColor = _menuTap['normal']!['textColor']!;
+        _bdColor = _menuTap['normal']!['borderColor']!;
+      }
+    });
+  }
+
+  void _clicked() {
+    setState(() {
+      _bgColor = _menuTap['active']!['bgColor']!;
+      _ttColor = _menuTap['active']!['textColor']!;
+      _bdColor = _menuTap['active']!['borderColor']!;
+    });
+  }
+
+  void _hover(PointerEvent details) {
+    setState(() {
+      _bgColor = _menuTap['hover']!['bgColor']!;
+      _ttColor = _menuTap['hover']!['textColor']!;
+      _bdColor = _menuTap['hover']!['borderColor']!;
+    });
+  }
+
+  final _menuTap = {
+    'normal': {
+      'textColor': Colors.amber,
+      'bgColor': Colors.blue,
+      'borderColor': Colors.purple,
+    },
+    'hover': {
+      'textColor': Colors.teal,
+      'bgColor': Colors.red,
+      'borderColor': Colors.yellow,
+    },
+    'active': {
+      'textColor': Colors.green,
+      'bgColor': Colors.black,
+      'borderColor': Colors.indigo,
+    },
+    'disabled': {
+      'textColor': Colors.pink,
+      'bgColor': Colors.grey,
+      'borderColor': Colors.purpleAccent,
+    },
+  };
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('MouseRegion'),
+        elevation: 0,
+        foregroundColor: Colors.cyanAccent,
+        backgroundColor: Colors.black,
+        centerTitle: true,
+      ),
+      backgroundColor: Colors.greenAccent[100],
+      body: Center(
+        child: Container(
+          width: 700,
+          height: 700,
+          color: Colors.white,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              MouseRegion(
+                cursor: SystemMouseCursors.click,
+                onEnter: _enter,
+                // onHover: _hover,
+                onExit: _exit,
+                child: GestureDetector(
+                  onTap: _clicked,
+                  child: Container(
+                    width: 200,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      color: _bgColor,
+                      // _bgColor
+                      border: Border.all(color: _bdColor, width: 11),
+                      // _borderColor
+                      borderRadius: const BorderRadius.all(Radius.circular(100.0)),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      '메뉴 소개',
+                      style: TextStyle(
+                        color: _ttColor,
+                        fontSize: 50,
+                      ),
+                      // _textColor
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 50),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                      onPressed: () {
+                        setState(() {
+                          _id = 1;
+                        });
+                      },
+                      child: Text('1')),
+                  TextButton(
+                      onPressed: () {
+                        setState(() {
+                          _id = 2;
+                        });
+                      },
+                      child: Text('2')),
+                ],
+              ),
+              Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.red, width: 1),
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                  '현재 id: ${_id.toString()}',
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
