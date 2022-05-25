@@ -11,76 +11,35 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'MouseRegion',
-      home: BBB(),
-      // home: AAA(),
-    );
-  }
-}
-
-class AAA extends StatelessWidget {
-  AAA({Key? key}) : super(key: key);
-
-  void _hover() {
-    print('d');
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('MouseRegion'),
-        elevation: 0,
-        foregroundColor: Colors.cyanAccent,
-        backgroundColor: Colors.black,
-        centerTitle: true,
-      ),
-      backgroundColor: Colors.greenAccent[100],
-      body: Center(
-        child: Container(
-          width: 700,
-          height: 700,
-          color: Colors.white,
-          child: Row(
-            children: <Widget>[
-              MouseRegion(
-                cursor: SystemMouseCursors.click,
-                // onHover: () => _hover,
-                child: GestureDetector(
-                  onTap: () => print('clicked'),
-                  child: Container(
-                    width: 100,
-                    height: 100,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.red, width: 1),
-                    ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      '메뉴 소개',
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('MouseRegion'),
+          elevation: 0,
+          foregroundColor: Colors.cyanAccent,
+          backgroundColor: Colors.black,
+          centerTitle: true,
         ),
+        backgroundColor: Colors.greenAccent[100],
+        body: AAA(),
       ),
     );
   }
 }
 
-class BBB extends StatefulWidget {
-  const BBB({Key? key}) : super(key: key);
+class AAA extends StatefulWidget {
+  const AAA({Key? key}) : super(key: key);
 
   @override
-  State<BBB> createState() => _BBBState();
+  State<AAA> createState() => _AAAState();
 }
 
-class _BBBState extends State<BBB> {
+class _AAAState extends State<AAA> {
 // 클릭시 _id값이 3이되면 active색으로 변경
 // _exit 시, _id가 3이아니면 적용하고 3이면 바뀐색 그대로 두게 변경없이
   late Color _ttColor;
   late Color _bgColor;
   late Color _bdColor;
+
   int _id = 1;
   @override
   void initState() {
@@ -104,15 +63,20 @@ class _BBBState extends State<BBB> {
         _bgColor = _menuTap['normal']!['bgColor']!;
         _ttColor = _menuTap['normal']!['textColor']!;
         _bdColor = _menuTap['normal']!['borderColor']!;
+      } else if (_id == 2) {
+        _bgColor = _menuTap['active']!['bgColor']!;
+        _ttColor = _menuTap['active']!['textColor']!;
+        _bdColor = _menuTap['active']!['borderColor']!;
       }
     });
   }
 
   void _clicked() {
     setState(() {
-      _bgColor = _menuTap['active']!['bgColor']!;
-      _ttColor = _menuTap['active']!['textColor']!;
-      _bdColor = _menuTap['active']!['borderColor']!;
+      _id = 2;
+      // _bgColor = _menuTap['active']!['bgColor']!;
+      // _ttColor = _menuTap['active']!['textColor']!;
+      // _bdColor = _menuTap['active']!['borderColor']!;
     });
   }
 
@@ -126,19 +90,19 @@ class _BBBState extends State<BBB> {
 
   final _menuTap = {
     'normal': {
-      'textColor': Colors.amber,
-      'bgColor': Colors.blue,
-      'borderColor': Colors.purple,
+      'textColor': Colors.cyanAccent,
+      'bgColor': Colors.black,
+      'borderColor': Colors.orange,
     },
     'hover': {
-      'textColor': Colors.teal,
-      'bgColor': Colors.red,
-      'borderColor': Colors.yellow,
+      'textColor': Colors.white,
+      'bgColor': Colors.teal,
+      'borderColor': Colors.red[900],
     },
     'active': {
-      'textColor': Colors.green,
-      'bgColor': Colors.black,
-      'borderColor': Colors.indigo,
+      'textColor': Colors.indigoAccent,
+      'bgColor': Colors.yellowAccent,
+      'borderColor': Colors.blueGrey,
     },
     'disabled': {
       'textColor': Colors.pink,
@@ -148,85 +112,65 @@ class _BBBState extends State<BBB> {
   };
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('MouseRegion'),
-        elevation: 0,
-        foregroundColor: Colors.cyanAccent,
-        backgroundColor: Colors.black,
-        centerTitle: true,
-      ),
-      backgroundColor: Colors.greenAccent[100],
-      body: Center(
-        child: Container(
-          width: 700,
-          height: 700,
-          color: Colors.white,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              MouseRegion(
-                cursor: SystemMouseCursors.click,
-                onEnter: _enter,
-                // onHover: _hover,
-                onExit: _exit,
-                child: GestureDetector(
-                  onTap: _clicked,
-                  child: Container(
-                    width: 200,
-                    height: 200,
-                    decoration: BoxDecoration(
-                      color: _bgColor,
-                      // _bgColor
-                      border: Border.all(color: _bdColor, width: 11),
-                      // _borderColor
-                      borderRadius: const BorderRadius.all(Radius.circular(100.0)),
+    return Center(
+      child: Container(
+        width: 700,
+        height: 700,
+        color: Colors.white,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            MouseRegion(
+              cursor: SystemMouseCursors.click,
+              onEnter: _enter,
+              // onHover: _hover,
+              onExit: _exit,
+              child: GestureDetector(
+                onTap: () => {
+                  setState(() {
+                    if (_id == 1) {
+                      _id = 2;
+                      // _clicked;
+                    } else if (_id == 2) {
+                      _id = 1;
+                    }
+                  }),
+                },
+                child: Container(
+                  width: 200,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    color: _bgColor,
+                    // _bgColor
+                    border: Border.all(color: _bdColor, width: 11),
+                    // _borderColor
+                    borderRadius: const BorderRadius.all(Radius.circular(100.0)),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    '메뉴 소개',
+                    style: TextStyle(
+                      color: _ttColor,
+                      fontSize: 40,
                     ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      '메뉴 소개',
-                      style: TextStyle(
-                        color: _ttColor,
-                        fontSize: 50,
-                      ),
-                      // _textColor
-                    ),
+                    // _textColor
                   ),
                 ),
               ),
-              SizedBox(height: 50),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton(
-                      onPressed: () {
-                        setState(() {
-                          _id = 1;
-                        });
-                      },
-                      child: Text('1')),
-                  TextButton(
-                      onPressed: () {
-                        setState(() {
-                          _id = 2;
-                        });
-                      },
-                      child: Text('2')),
-                ],
+            ),
+            SizedBox(height: 50),
+            Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.red, width: 1),
               ),
-              Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.red, width: 1),
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  '현재 id: ${_id.toString()}',
-                ),
+              alignment: Alignment.center,
+              child: Text(
+                '현재 id: ${_id.toString()}',
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
